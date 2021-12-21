@@ -1,0 +1,13 @@
+id = "nats-gatekeeper.testing01.example.org"
+http_addr = "0.0.0.0:8080"
+
+[authz."testing01.example.org"]
+type = "none"
+
+[authn."iam.testing01.svc.example.org"]
+audience = ["testing01.svc.example.org", "testing01.usr.example.org"]
+algorithm = "ES256"
+key = "data/keys/iam.example.public_key.p8.der.sample"
+
+[metrics.http]
+bind_address = "0.0.0.0:8087"
