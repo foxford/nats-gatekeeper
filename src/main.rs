@@ -26,8 +26,9 @@ async fn main() -> Result<()> {
     tracing::subscriber::set_global_default(subscriber)?;
     warn!("Launching {}, version: {}", APP, APP_VERSION);
 
+    let nats_key = std::env::var("NATS_KEY")?;
     let authz_cache = redis::create_redis();
-    app::run(authz_cache).await
+    app::run(nats_key, authz_cache).await
 }
 
 mod app;

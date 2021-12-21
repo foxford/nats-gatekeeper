@@ -19,7 +19,7 @@ pub fn build_router(context: AppContext) -> Router {
     let authn = context.config().authn.clone();
     let router = Router::new()
         .metered_route(
-            "/tokens",
+            "/audiences/:audience/scopes/:scope/tokens",
             post(endpoint::nats::create_token).options(endpoint::read_options),
         )
         .layer(svc_utils::middleware::CorsLayer)

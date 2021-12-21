@@ -8,14 +8,14 @@ use crate::app::context::AppContext;
 use crate::app::http::build_router;
 use crate::config;
 
-pub(crate) async fn run(authz_cache: Option<Box<dyn AuthzCache>>) -> Result<()> {
+pub(crate) async fn run(nats_key: String, authz_cache: Option<Box<dyn AuthzCache>>) -> Result<()> {
     let config = config::load().context("Failed to load config")?;
     info!("App config: {:?}", config);
 
     let authz = svc_authz::ClientMap::new(&config.id, authz_cache, config.authz.clone(), None)
         .context("Error converting authz config to clients")?;
 
-    let context = AppContext::new(config.clone(), authz);
+    let context = AppContext::new(config.clone(), authz, nats_key);
 
     let metrics_task = config
         .metrics
@@ -51,7 +51,9 @@ pub(crate) async fn run(authz_cache: Option<Box<dyn AuthzCache>>) -> Result<()> 
     Ok(())
 }
 
+mod authz;
 mod context;
 mod endpoint;
 mod error;
 mod http;
+mod metrics;

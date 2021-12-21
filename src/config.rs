@@ -16,6 +16,10 @@ pub struct Config {
     pub http_addr: SocketAddr,
     pub sentry: Option<SentryConfig>,
     pub metrics: Option<MetricsConfig>,
+    #[serde(default = "default_max_payload")]
+    pub max_payload: i64,
+    #[serde(default = "default_max_subscriptions")]
+    pub max_subscriptions: i64,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -41,4 +45,12 @@ pub(crate) fn load() -> Result<Config, config::ConfigError> {
     parser.merge(config::File::with_name("App"))?;
     parser.merge(config::Environment::with_prefix("APP").separator("__"))?;
     parser.try_into::<Config>()
+}
+
+fn default_max_payload() -> i64 {
+    100_000
+}
+
+fn default_max_subscriptions() -> i64 {
+    5
 }

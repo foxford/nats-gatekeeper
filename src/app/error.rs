@@ -13,6 +13,7 @@ struct ErrorKindProperties {
 #[derive(Debug, Clone, Copy)]
 pub enum ErrorKind {
     AccessDenied,
+    AuthorizationFailed,
 }
 
 impl ErrorKind {
@@ -34,6 +35,12 @@ impl From<ErrorKind> for ErrorKindProperties {
                 status: StatusCode::FORBIDDEN,
                 kind: "access_denied",
                 title: "Access denied",
+                is_notify_sentry: false,
+            },
+            ErrorKind::AuthorizationFailed => ErrorKindProperties {
+                status: StatusCode::UNPROCESSABLE_ENTITY,
+                kind: "authorization_failed",
+                title: "Authorization failed",
                 is_notify_sentry: false,
             },
         }
@@ -74,6 +81,20 @@ impl Error {
 
         if let Err(e) = sentry::send(self.err.clone()) {
             tracing::error!("Failed to send error to sentry, reason = {:?}", e);
+        }
+    }
+}
+
+impl From<svc_authz::Error> for Error {
+    fn from(source: svc_authz::Error) -> Self {
+        let kind = match source.kind() {
+            svc_authz::ErrorKind::Forbidden(_) => ErrorKind::AccessDenied,
+            _ => ErrorKind::AuthorizationFailed,
+        };
+
+        Self {
+            kind,
+            err: Arc::new(source.into()),
         }
     }
 }
