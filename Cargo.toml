@@ -2,6 +2,8 @@
 name = "nats-gatekeeper"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+authors = ["Shamir Khodzha <khodzha.sh@foxford.ru>", "foxford.ru developers"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
