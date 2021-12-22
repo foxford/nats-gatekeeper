@@ -1,4 +1,5 @@
 use std::net::SocketAddr;
+use std::time::Duration;
 
 use serde::Deserialize;
 use svc_authn::{
@@ -20,6 +21,8 @@ pub struct Config {
     pub max_payload: i64,
     #[serde(default = "default_max_subscriptions")]
     pub max_subscriptions: i64,
+    #[serde(default = "default_expiration", with = "humantime_serde")]
+    pub expiration: std::time::Duration,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -53,4 +56,8 @@ fn default_max_payload() -> i64 {
 
 fn default_max_subscriptions() -> i64 {
     5
+}
+
+fn default_expiration() -> Duration {
+    Duration::from_secs(300)
 }

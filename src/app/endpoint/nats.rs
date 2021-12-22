@@ -1,3 +1,5 @@
+use std::time::SystemTime;
+
 use anyhow::Context;
 use axum::extract::{Extension, Path};
 use serde::Serialize;
@@ -12,6 +14,7 @@ use crate::app::{authz::AuthzObject, metrics::AuthorizeMetrics};
 #[derive(Serialize)]
 struct TokenResponse {
     token: String,
+    expires_in: u64,
 }
 
 pub async fn create_token(
@@ -61,7 +64,20 @@ fn build_token(
             .max_subscriptions(ctx.config().max_subscriptions)
             .allow_publish(allowed_topic.clone())
             .allow_subscribe(allowed_topic)
+            .expires(expiration(ctx))
             .sign(&account_keypair);
 
-    Ok(TokenResponse { token: user_token })
+    Ok(TokenResponse {
+        token: user_token,
+        expires_in: ctx.config().expiration.as_secs(),
+    })
+}
+
+fn expiration(ctx: &AppContext) -> i64 {
+    let duration = ctx.config().expiration;
+
+    (SystemTime::now() + duration)
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64
 }
