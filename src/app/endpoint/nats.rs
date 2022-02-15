@@ -49,8 +49,12 @@ fn build_token(
     account_id: &AccountId,
 ) -> Result<TokenResponse, AppError> {
     let account_keypair = nats_jwt::KeyPair::from_seed(ctx.nats_key())
+        .map_err(|e| {
+            tracing::error!(error = ?e, "Failed to create kp");
+            e
+        })
         .context("Failed to create keypair from seed")
-        .error(ErrorKind::AuthorizationFailed)?;
+        .error(ErrorKind::InternalServerError)?;
 
     let user_keypair = nats_jwt::KeyPair::new_user();
 

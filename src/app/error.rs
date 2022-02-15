@@ -14,6 +14,7 @@ struct ErrorKindProperties {
 pub enum ErrorKind {
     AccessDenied,
     AuthorizationFailed,
+    InternalServerError,
 }
 
 impl ErrorKind {
@@ -42,6 +43,12 @@ impl From<ErrorKind> for ErrorKindProperties {
                 kind: "authorization_failed",
                 title: "Authorization failed",
                 is_notify_sentry: false,
+            },
+            ErrorKind::InternalServerError => ErrorKindProperties {
+                status: StatusCode::INTERNAL_SERVER_ERROR,
+                kind: "internal_server_error",
+                title: "Internal server errors",
+                is_notify_sentry: true,
             },
         }
     }
