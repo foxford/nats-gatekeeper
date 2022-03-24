@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nats-gatekeeper.name" . }}
+  labels:
+    {{- include "nats-gatekeeper.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount | default 2 }}
+  selector:
+    matchLabels:
+      {{- include "nats-gatekeeper.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "nats-gatekeeper.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.container.image.repository }}:{{ .Values.container.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            {{- toYaml .Values.container.env | nindent 12}}
+          volumeMounts:
+            {{- toYaml .Values.container.volumeMounts | nindent 12}}
+          resources:
+            {{- toYaml .Values.container.resources | nindent 12 }}
+      volumes:
+        {{- toYaml .Values.container.volumes | nindent 8}}
