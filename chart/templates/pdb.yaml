@@ -1,0 +1,11 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "nats-gatekeeper.name" . }}-pdb
+  labels:
+    {{- include "nats-gatekeeper.labels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      {{- include "nats-gatekeeper.selectorLabels" . | nindent 6 }}
