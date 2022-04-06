@@ -9,34 +9,6 @@ container:
     repository: foxford/nats-gatekeeper
     tag: ""
 
-  env:
-    - name: RUST_LOG
-      valueFrom:
-        configMapKeyRef:
-          key: RUST_LOG
-          name: nats-gatekeeper-environment
-    - name: NATS_KEY
-      valueFrom:
-        secretKeyRef:
-          key: gatekeeper-account.nk
-          name: nats-credentials
-
-  volumes:
-    - name: config
-      configMap:
-        name: nats-gatekeeper-config
-    - name: svc
-      secret:
-        secretName: some-secret
-
-  volumeMounts:
-    - name: config
-      mountPath: /app/App.toml
-      subPath: App.toml
-    - mountPath: /path/to/mount
-      name: svc
-      subPath: svc.private_key
-
   resources:
     limits:
       cpu: 0.5
@@ -45,12 +17,24 @@ container:
       cpu: 0.5
       memory: 50Mi
 
+svc:
+  audience: svc.services
+  credentials:
+    - secret: svc-secret
+      subPath: private-key
+      mountPath: /path/to/svc/private/key
+
 audiences:
-  tenantless:
+  - audience: foo.bar
+    credentials:
+      - secret: foobar-der-credentials
+        subPath: foobar-public-key
+        mountPath: /path/to/foobar/public/key
     authn:
       key: path/to/public_key.p8.der
     authz:
-      type: none
+      type: http
+      url: "https://authz.example.org/api/v1/authz"
 
 config:
   expiration: 16 hours

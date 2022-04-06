@@ -26,10 +26,55 @@ spec:
           image: "{{ .Values.container.image.repository }}:{{ .Values.container.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           env:
-            {{- toYaml .Values.container.env | nindent 12}}
-          volumeMounts:
-            {{- toYaml .Values.container.volumeMounts | nindent 12}}
+            - name: RUST_LOG
+              valueFrom:
+                configMapKeyRef:
+                  key: RUST_LOG
+                  name: nats-gatekeeper-environment
+            - name: NATS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: gatekeeper-account.nk
+                  name: nats-credentials
           resources:
             {{- toYaml .Values.container.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/App.toml
+              subPath: App.toml
+            {{- with .Values.svc }}
+            {{- $audience := .audience }}
+            {{- range .credentials }}
+            - name: {{ include "nats-gatekeeper.volumeMountName" (list $audience .secret) }}
+              mountPath: {{ .mountPath }}
+              subPath: {{ .subPath }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.audiences }}
+            {{- $audience := .audience }}
+            {{- range .credentials }}
+            - name: {{ include "nats-gatekeeper.volumeMountName" (list $audience .secret) }}
+              mountPath: {{ .mountPath }}
+              subPath: {{ .subPath }}
+            {{- end }}
+            {{- end }}
       volumes:
-        {{- toYaml .Values.container.volumes | nindent 8}}
+        - name: config
+          configMap:
+            name: nats-gatekeeper-config
+        {{- with .Values.svc }}
+        {{- $audience := .audience }}
+        {{- range .credentials }}
+        - name: {{ include "nats-gatekeeper.volumeMountName" (list $audience .secret) }}
+          secret:
+            secretName: {{ .secret }}
+        {{- end }}
+        {{- end }}
+        {{- range .Values.audiences }}
+        {{- $audience := .audience }}
+        {{- range .credentials }}
+        - name: {{ include "nats-gatekeeper.volumeMountName" (list $audience .secret) }}
+          secret:
+            secretName: {{ .secret }}
+        {{- end }}
+        {{- end }}
