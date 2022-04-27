@@ -12,6 +12,13 @@ build:
     useDockerCLI: true
     tryImportMissing: true
 deploy:
-  kustomize:
-    paths:
-    - deploy/k8s/overlays/ns
+  helm:
+    releases:
+    - name: nats-gatekeeper
+      chartPath: chart
+      artifactOverrides:
+        container.image: foxford/nats-gatekeeper
+      imageStrategy:
+        helm: {}
+      valuesFiles:
+        - deploy/values.yaml

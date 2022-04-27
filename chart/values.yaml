@@ -20,14 +20,14 @@ container:
 svc:
   audience: svc.services
   credentials:
-    - secret: svc-secret
-      subPath: private-key
-      mountPath: /path/to/svc/private/key
+  #   svc-secret:
+  #     subPath: private-key
+  #     mountPath: /path/to/svc/private/key
 
 audiences:
   - audience: foo.bar
     credentials:
-      - secret: foobar-der-credentials
+      foobar-der-credentials:
         subPath: foobar-public-key
         mountPath: /path/to/foobar/public/key
     authn:
