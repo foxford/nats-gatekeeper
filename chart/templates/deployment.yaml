@@ -37,7 +37,7 @@ spec:
                   key: gatekeeper-account.nk
                   name: nats-credentials
           resources:
-            {{- toYaml .Values.container.resources | nindent 12 }}
+            {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /app/App.toml

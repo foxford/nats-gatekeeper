@@ -9,13 +9,13 @@ container:
     repository: foxford/nats-gatekeeper
     tag: ""
 
-  resources:
-    limits:
-      cpu: 0.5
-      memory: 50Mi
-    requests:
-      cpu: 0.5
-      memory: 50Mi
+resources:
+  limits:
+    cpu: 0.5
+    memory: 50Mi
+  requests:
+    cpu: 0.5
+    memory: 50Mi
 
 svc:
   audience: svc.services
