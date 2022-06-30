@@ -53,5 +53,6 @@ clusterService:
 
 ingress:
   host: foo.bar.example
-  tls:
-    secretName: tls-certificates
+
+tls:
+  secretName: tls-certificates
