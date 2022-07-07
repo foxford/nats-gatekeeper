@@ -918,7 +918,7 @@ dependencies = [
 [[package]]
 name = "nats-jwt"
 version = "0.1.0"
-source = "git+https://github.com/khodzha/nats-jwt?branch=expires#f1109e63edfef8f87c6e3ce26215d189868b5fd5"
+source = "git+https://github.com/khodzha/nats-jwt?branch=expires#5838fa733dd9507d567a026fdb7d374e8f875422"
 dependencies = [
  "data-encoding",
  "nkeys",
