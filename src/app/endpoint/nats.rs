@@ -34,7 +34,7 @@ pub async fn create_token(
         .await
         .measure()?;
 
-    let token = build_token(&ctx, &scope, &agent_id.as_account_id())?;
+    let token = build_token(&ctx, &scope, agent_id.as_account_id())?;
     let body = serde_json::to_string(&token).unwrap();
 
     Ok(hyper::Response::builder()
