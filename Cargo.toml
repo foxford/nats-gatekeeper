@@ -8,7 +8,7 @@ authors = ["foxford.ru developers", "Shamir Khodzha <khodzha.sh@gmail.com>"]
 
 [dependencies]
 anyhow = "1.0"
-axum = { version = "0.4", features = ["headers"] }
+axum = { version = "0.5", features = ["headers"] }
 chrono = { version = "0.4", features = ["serde"] }
 config = "0.11"
 futures = "0.3.19"
