@@ -51,6 +51,7 @@ impl IntoResponse for AppError {
             serde_json::to_string(&err).unwrap_or_else(|_| "Failed to serialize error".to_string());
         http::Response::builder()
             .status(self.status())
+            .header(http::header::CONTENT_TYPE, "application/json")
             .body(axum::body::Body::from(error))
             .expect("This is a valid response")
     }
