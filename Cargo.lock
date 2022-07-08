@@ -109,6 +109,51 @@ dependencies = [
 ]
 
 [[package]]
+name = "axum"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1dbbc81d15ddf33148615b778836b525dbae4e0731710294b2c484e80c4858f7"
+dependencies = [
+ "async-trait",
+ "axum-core",
+ "bitflags",
+ "bytes",
+ "futures-util",
+ "http",
+ "http-body",
+ "hyper",
+ "matchit",
+ "memchr",
+ "mime",
+ "percent-encoding",
+ "pin-project-lite",
+ "serde 1.0.132",
+ "serde_json",
+ "serde_urlencoded",
+ "sync_wrapper",
+ "tokio",
+ "tokio-util",
+ "tower",
+ "tower-http 0.2.5",
+ "tower-layer",
+ "tower-service",
+]
+
+[[package]]
+name = "axum-core"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6dbcda393bef9c87572779cb8ef916f12d77750b27535dd6819fa86591627a51"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "futures-util",
+ "http",
+ "http-body",
+ "mime",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.63"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -887,7 +932,7 @@ name = "nats-gatekeeper"
 version = "0.1.1"
 dependencies = [
  "anyhow",
- "axum",
+ "axum 0.3.4",
  "chrono",
  "config",
  "futures",
@@ -1854,11 +1899,11 @@ dependencies = [
 
 [[package]]
 name = "svc-utils"
-version = "0.1.6"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff5244f523f20f959682450641d86dd9d4d37e6804966170f0946f18a87146d5"
+checksum = "a743994f2e9ff82a350fd4bcc8eff3bb293e2157aec3d851c6f0526b389328f6"
 dependencies = [
- "axum",
+ "axum 0.4.5",
  "futures",
  "http",
  "hyper",
@@ -1868,7 +1913,7 @@ dependencies = [
  "svc-authn",
  "tokio",
  "tower",
- "tower-http 0.2.0",
+ "tower-http 0.2.5",
  "tracing",
 ]
 
@@ -2088,9 +2133,9 @@ dependencies = [
 
 [[package]]
 name = "tower-http"
-version = "0.2.0"
+version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39ee603d6e665ecc7e0f8d479eedb4626bd4726f0ee6119cee5b3a6bf184cac0"
+checksum = "aba3f3efabf7fb41fae8534fc20a817013dd1c12cb45441efb6c82e6556b4cd8"
 dependencies = [
  "bitflags",
  "bytes",
