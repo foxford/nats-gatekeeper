@@ -80,36 +80,6 @@ checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
 
 [[package]]
 name = "axum"
-version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b4e96976b2022b23b2199168ff9b281e9ddc1aa795607d5cb7146868ca5c101"
-dependencies = [
- "async-trait",
- "bitflags",
- "bytes",
- "futures-util",
- "headers",
- "http",
- "http-body",
- "hyper",
- "matchit",
- "mime",
- "percent-encoding",
- "pin-project-lite",
- "serde 1.0.132",
- "serde_json",
- "serde_urlencoded",
- "sync_wrapper",
- "tokio",
- "tokio-util",
- "tower",
- "tower-http 0.1.2",
- "tower-layer",
- "tower-service",
-]
-
-[[package]]
-name = "axum"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dbbc81d15ddf33148615b778836b525dbae4e0731710294b2c484e80c4858f7"
@@ -119,6 +89,7 @@ dependencies = [
  "bitflags",
  "bytes",
  "futures-util",
+ "headers",
  "http",
  "http-body",
  "hyper",
@@ -134,7 +105,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tower",
- "tower-http 0.2.5",
+ "tower-http",
  "tower-layer",
  "tower-service",
 ]
@@ -932,7 +903,7 @@ name = "nats-gatekeeper"
 version = "0.1.1"
 dependencies = [
  "anyhow",
- "axum 0.3.4",
+ "axum",
  "chrono",
  "config",
  "futures",
@@ -1903,7 +1874,7 @@ version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a743994f2e9ff82a350fd4bcc8eff3bb293e2157aec3d851c6f0526b389328f6"
 dependencies = [
- "axum 0.4.5",
+ "axum",
  "futures",
  "http",
  "hyper",
@@ -1913,7 +1884,7 @@ dependencies = [
  "svc-authn",
  "tokio",
  "tower",
- "tower-http 0.2.5",
+ "tower-http",
  "tracing",
 ]
 
@@ -2113,22 +2084,6 @@ dependencies = [
  "tower-layer",
  "tower-service",
  "tracing",
-]
-
-[[package]]
-name = "tower-http"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f70061b0592867f0a60e67a6e699da5fe000c88a360a5b92ebdba9d73b2238c"
-dependencies = [
- "bytes",
- "futures-core",
- "futures-util",
- "http",
- "http-body",
- "pin-project",
- "tower-layer",
- "tower-service",
 ]
 
 [[package]]
