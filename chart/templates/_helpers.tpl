@@ -86,7 +86,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-k8s-app: {{ include "nats-gatekeeper.name" . }}
+app: {{ include "nats-gatekeeper.name" . }}
 {{- end }}
 
 {{/*

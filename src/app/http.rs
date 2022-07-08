@@ -3,7 +3,7 @@ use std::sync::Arc;
 use axum::{
     response::IntoResponse,
     routing::{get, post},
-    AddExtensionLayer, Router,
+    AddExtensionLayer, Json, Router,
 };
 use http::Response;
 use hyper::Body;
@@ -39,20 +39,9 @@ pub fn build_router(context: AppContext) -> Router {
 }
 
 impl IntoResponse for AppError {
-    type Body = axum::body::Body;
-
-    type BodyError = <Self::Body as axum::body::HttpBody>::Error;
-
-    fn into_response(self) -> hyper::Response<Self::Body> {
+    fn into_response(self) -> axum::response::Response {
         self.notify_sentry();
 
-        let err = self.to_svc_error();
-        let error =
-            serde_json::to_string(&err).unwrap_or_else(|_| "Failed to serialize error".to_string());
-        http::Response::builder()
-            .status(self.status())
-            .header(http::header::CONTENT_TYPE, "application/json")
-            .body(axum::body::Body::from(error))
-            .expect("This is a valid response")
+        (self.status(), Json(self.to_svc_error())).into_response()
     }
 }
