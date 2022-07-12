@@ -85,7 +85,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dbbc81d15ddf33148615b778836b525dbae4e0731710294b2c484e80c4858f7"
 dependencies = [
  "async-trait",
- "axum-core",
+ "axum-core 0.1.2",
  "bitflags",
  "bytes",
  "futures-util",
@@ -93,7 +93,7 @@ dependencies = [
  "http",
  "http-body",
  "hyper",
- "matchit",
+ "matchit 0.4.4",
  "memchr",
  "mime",
  "percent-encoding",
@@ -105,7 +105,38 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tower",
- "tower-http",
+ "tower-http 0.2.5",
+ "tower-layer",
+ "tower-service",
+]
+
+[[package]]
+name = "axum"
+version = "0.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f4af7447fc1214c1f3a1ace861d0216a6c8bb13965b64bbad9650f375b67689a"
+dependencies = [
+ "async-trait",
+ "axum-core 0.2.3",
+ "bitflags",
+ "bytes",
+ "futures-util",
+ "http",
+ "http-body",
+ "hyper",
+ "itoa 1.0.1",
+ "matchit 0.5.0",
+ "memchr",
+ "mime",
+ "percent-encoding",
+ "pin-project-lite",
+ "serde 1.0.132",
+ "serde_json",
+ "serde_urlencoded",
+ "sync_wrapper",
+ "tokio",
+ "tower",
+ "tower-http 0.3.3",
  "tower-layer",
  "tower-service",
 ]
@@ -115,6 +146,20 @@ name = "axum-core"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6dbcda393bef9c87572779cb8ef916f12d77750b27535dd6819fa86591627a51"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "futures-util",
+ "http",
+ "http-body",
+ "mime",
+]
+
+[[package]]
+name = "axum-core"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3bdc19781b16e32f8a7200368a336fa4509d4b72ef15dd4e41df5290855ee1e6"
 dependencies = [
  "async-trait",
  "bytes",
@@ -828,6 +873,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "58b6f41fdfbec185dd3dff58b51e323f5bc61692c0de38419a957b0dcfccca3c"
 
 [[package]]
+name = "matchit"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73cbba799671b762df5a175adf59ce145165747bb891505c43d09aefbbf38beb"
+
+[[package]]
 name = "memchr"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -903,7 +954,7 @@ name = "nats-gatekeeper"
 version = "0.1.2"
 dependencies = [
  "anyhow",
- "axum",
+ "axum 0.4.5",
  "chrono",
  "config",
  "futures",
@@ -1870,11 +1921,11 @@ dependencies = [
 
 [[package]]
 name = "svc-utils"
-version = "0.2.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a743994f2e9ff82a350fd4bcc8eff3bb293e2157aec3d851c6f0526b389328f6"
+checksum = "abff16065bb2171282ff42f650b6c7b03b4d0c52621ce4659163a666f6fecc4c"
 dependencies = [
- "axum",
+ "axum 0.5.4",
  "futures",
  "http",
  "hyper",
@@ -1882,9 +1933,10 @@ dependencies = [
  "prometheus",
  "svc-agent",
  "svc-authn",
+ "svc-error",
  "tokio",
  "tower",
- "tower-http",
+ "tower-http 0.2.5",
  "tracing",
 ]
 
@@ -2103,6 +2155,25 @@ dependencies = [
  "tower-layer",
  "tower-service",
  "tracing",
+]
+
+[[package]]
+name = "tower-http"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d342c6d58709c0a6d48d48dabbb62d4ef955cf5f0f3bbfd845838e7ae88dbae"
+dependencies = [
+ "bitflags",
+ "bytes",
+ "futures-core",
+ "futures-util",
+ "http",
+ "http-body",
+ "http-range-header",
+ "pin-project-lite",
+ "tower",
+ "tower-layer",
+ "tower-service",
 ]
 
 [[package]]
