@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nats-gatekeeper.name" . }}
+  name: {{ include "nats-gatekeeper.fullname" . }}
   labels:
     {{- include "nats-gatekeeper.labels" . | nindent 4 }}
 spec:
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/app-cm: {{ include (print $.Template.BasePath "/app-cm.yaml") . | sha256sum }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -23,26 +23,25 @@ spec:
         - name: regcred
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.container.image.repository }}:{{ .Values.container.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           env:
-            - name: RUST_LOG
-              valueFrom:
-                configMapKeyRef:
-                  key: RUST_LOG
-                  name: nats-gatekeeper-environment
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
             - name: NATS_KEY
               valueFrom:
                 secretKeyRef:
                   key: gatekeeper-account.nk
                   name: nats-credentials
           resources:
-            {{- toYaml .Values.container.resources | nindent 12 }}
+            {{- toYaml .Values.app.resources | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /app/App.toml
               subPath: App.toml
-            {{- with .Values.svc }}
+            {{- with .Values.app.svc }}
             {{- $audience := .audience }}
             {{- range $secret, $mounts := .credentials }}
             {{- range $mounts }}
@@ -52,7 +51,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
-            {{- range .Values.audiences }}
+            {{- range .Values.app.audiences }}
             {{- $audience := .audience }}
             {{- range $secret, $mounts := .credentials }}
             {{- range $mounts }}
@@ -65,8 +64,8 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: nats-gatekeeper-config
-        {{- with .Values.svc }}
+            name: {{ include "nats-gatekeeper.fullname" . }}-app
+        {{- with .Values.app.svc }}
         {{- $audience := .audience }}
         {{- range $secret, $mounts := .credentials }}
         - name: {{ include "nats-gatekeeper.volumeMountName" (list $audience $secret) }}
@@ -74,7 +73,7 @@ spec:
             secretName: {{ $secret }}
         {{- end }}
         {{- end }}
-        {{- range .Values.audiences }}
+        {{- range .Values.app.audiences }}
         {{- $audience := .audience }}
         {{- range $secret, $mounts := .credentials }}
         - name: {{ include "nats-gatekeeper.volumeMountName" (list $audience $secret) }}

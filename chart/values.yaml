@@ -4,7 +4,7 @@
 
 replicaCount: 2
 
-container:
+app:
   image:
     repository: foxford/nats-gatekeeper
     tag: ""
@@ -17,38 +17,39 @@ container:
       cpu: 0.5
       memory: 50Mi
 
-svc:
-  audience: svc.services
-  credentials:
-  #   svc-secret:
-  #     subPath: private-key
-  #     mountPath: /path/to/svc/private/key
-
-audiences:
-  - audience: foo.bar
+  svc:
+    audience: svc.services
     credentials:
-      foobar-der-credentials:
-        subPath: foobar-public-key
-        mountPath: /path/to/foobar/public/key
-    authn:
-      key: path/to/public_key.p8.der
-    authz:
-      type: http
-      url: "https://authz.example.org/api/v1/authz"
+      # svc-secret:
+      #   - subPath: private-key
+      #     mountPath: /path/to/svc/private/key
+      #   - subPath: public-key
+      #     mountPath: /path/to/svc/public/key
 
-config:
-  expiration: 16 hours
-  max_subscriptions: 5
-  max_payload: 102400
+  audiences:
+    - audience: foo.bar
+      credentials:
+        foobar-der-credentials:
+          - subPath: foobar-public-key
+            mountPath: /path/to/foobar/public/key
+      authn:
+        key: path/to/public_key.p8.der
+      authz:
+        type: http
+        url: "https://authz.example.org/api/v1/authz"
+
+  natsTokenClaims:
+    expiration: 16 hours
+    max_subscriptions: 5
+    max_payload: 102400
 
 env:
   RUST_LOG: warn,nats_gatekeeper=info,svc_utils=info,svc_utils::metrics=warn
 
-service:
-  type: ClusterIP
+clusterService:
   ports:
     http: 8080
-    metrics: 8081
+    metrics: 8888
 
 ingress:
   host: foo.bar.example

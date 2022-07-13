@@ -3,25 +3,25 @@ kind: ConfigMap
 metadata:
   labels:
     {{- include "nats-gatekeeper.labels" . | nindent 4 }}
-  name: {{ include "nats-gatekeeper.name" . }}-config
+  name: {{ include "nats-gatekeeper.fullname" . }}-app
 data:
   App.toml: |
-    {{- $id := list (include "nats-gatekeeper.name" . ) (include "nats-gatekeeper.shortNamespace" .) .Values.svc.audience | compact | join "." }}
+    {{- $id := list (include "nats-gatekeeper.name" . ) (include "nats-gatekeeper.shortNamespace" .) .Values.app.svc.audience | compact | join "." }}
     id = {{ $id | quote }}
 
-    http_addr = "0.0.0.0:{{ get .Values.service.ports "http" }}"
+    http_addr = "0.0.0.0:8080"
 
-    expiration = {{ .Values.config.expiration | quote }}
-    max_subscriptions = {{ .Values.config.max_subscriptions }}
-    max_payload = {{ .Values.config.max_payload }}
+    expiration = {{ .Values.app.natsTokenClaims.expiration | quote }}
+    max_subscriptions = {{ .Values.app.natsTokenClaims.max_subscriptions }}
+    max_payload = {{ .Values.app.natsTokenClaims.max_payload }}
 
 
     [metrics.http]
-    bind_address = "0.0.0.0:{{ get .Values.service.ports "metrics" }}"
+    bind_address = "0.0.0.0:8888"
 
     {{- println "" }}
 
-    {{- range .Values.audiences }}
+    {{- range .Values.app.audiences }}
     ##
     ## {{ .audience }}
     ##

@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "nats-gatekeeper.name" . }}-ingress
+  name: {{ include "nats-gatekeeper.fullname" . }}
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$2
@@ -17,5 +17,5 @@ spec:
           - path: {{ include "nats-gatekeeper.ingressPath" . }}(/|$)(.*)
             pathType: Prefix
             backend:
-              serviceName: {{ include "nats-gatekeeper.serviceName" $ }}
-              servicePort: {{ get .Values.service.ports "http" }}
+              serviceName: {{ include "nats-gatekeeper.fullname" $ }}-cluster
+              servicePort: {{ get .Values.clusterService.ports "http" }}
