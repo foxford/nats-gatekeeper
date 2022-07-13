@@ -17,7 +17,7 @@ deploy:
     - name: nats-gatekeeper
       chartPath: chart
       artifactOverrides:
-        container.image: foxford/nats-gatekeeper
+        app.image: foxford/nats-gatekeeper
       imageStrategy:
         helm: {}
       valuesFiles:
