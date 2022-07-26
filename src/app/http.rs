@@ -3,7 +3,7 @@ use std::sync::Arc;
 use axum::{
     response::IntoResponse,
     routing::{get, post},
-    AddExtensionLayer, Json, Router,
+    Extension, Json, Router,
 };
 use http::Response;
 use hyper::Body;
@@ -23,8 +23,8 @@ pub fn build_router(context: AppContext) -> Router {
             post(endpoint::nats::create_token).options(endpoint::read_options),
         )
         .layer(svc_utils::middleware::CorsLayer)
-        .layer(AddExtensionLayer::new(context))
-        .layer(AddExtensionLayer::new(Arc::new(authn)));
+        .layer(Extension(context))
+        .layer(Extension(Arc::new(authn)));
 
     let routes = Router::new().nest("/api/v1", router);
 
