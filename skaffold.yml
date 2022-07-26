@@ -2,7 +2,7 @@ apiVersion: skaffold/v2beta11
 kind: Config
 build:
   artifacts:
-  - image: foxford/nats-gatekeeper
+  - image: cr.yandex/crp1of6bddata8ain3q5/nats-gatekeeper
     docker:
       dockerfile: docker/Dockerfile
   tagPolicy:
@@ -17,7 +17,7 @@ deploy:
     - name: nats-gatekeeper
       chartPath: chart
       artifactOverrides:
-        app.image: foxford/nats-gatekeeper
+        app.image: cr.yandex/crp1of6bddata8ain3q5/nats-gatekeeper
       imageStrategy:
         helm: {}
       valuesFiles:
