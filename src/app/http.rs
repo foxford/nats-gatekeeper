@@ -18,9 +18,14 @@ use super::{
 pub fn build_router(context: AppContext) -> Router {
     let authn = context.config().authn.clone();
     let router = Router::new()
+        // TODO: Delete it in the next release
         .metered_route(
             "/audiences/:audience/scopes/:scope/tokens",
-            post(endpoint::nats::create_token).options(endpoint::read_options),
+            post(endpoint::nats::create_token_for_scope).options(endpoint::read_options),
+        )
+        .metered_route(
+            "/audiences/:audience/classrooms/:classroom_id/tokens",
+            post(endpoint::nats::create_token_for_classroom).options(endpoint::read_options),
         )
         .layer(svc_utils::middleware::CorsLayer)
         .layer(Extension(context))
