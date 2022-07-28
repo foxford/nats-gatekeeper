@@ -22,7 +22,7 @@ pub struct Config {
     #[serde(default = "default_max_subscriptions")]
     pub max_subscriptions: i64,
     #[serde(default = "default_expiration", with = "humantime_serde")]
-    pub expiration: std::time::Duration,
+    pub expiration: Duration,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -32,7 +32,7 @@ pub struct MetricsConfig {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MetricsHttpConfig {
-    pub bind_address: std::net::SocketAddr,
+    pub bind_address: SocketAddr,
 }
 
 #[derive(Clone, Debug, Deserialize)]
