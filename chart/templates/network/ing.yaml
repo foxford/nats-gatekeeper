@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "nats-gatekeeper.fullname" . }}
@@ -17,5 +17,7 @@ spec:
           - path: {{ include "nats-gatekeeper.ingressPath" . }}(/|$)(.*)
             pathType: Prefix
             backend:
-              serviceName: {{ include "nats-gatekeeper.fullname" $ }}-cluster
-              servicePort: {{ get .Values.clusterService.ports "http" }}
+              service:
+                name: {{ include "nats-gatekeeper.fullname" $ }}-cluster
+                port:
+                  number: {{ get .Values.clusterService.ports "http" }}
