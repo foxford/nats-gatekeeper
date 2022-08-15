@@ -17,7 +17,7 @@ struct TokenResponse {
     expires_in: u64,
 }
 
-pub async fn create_token_for_classroom(
+pub async fn create_token(
     Extension(ctx): Extension<AppContext>,
     AuthnExtractor(agent_id): AuthnExtractor,
     Path((audience, classroom_id)): Path<(String, Uuid)>,
@@ -36,33 +36,6 @@ pub async fn create_token_for_classroom(
         .measure()?;
 
     let token = build_token(&ctx, classrooms, classroom_id, agent_id.as_account_id())?;
-    let body = serde_json::to_string(&token).unwrap();
-
-    Ok(hyper::Response::builder()
-        .header(http::header::CONTENT_TYPE, "application/json")
-        .body(hyper::Body::from(body))
-        .unwrap())
-}
-
-// TODO: Delete it in the next release
-pub async fn create_token_for_scope(
-    Extension(ctx): Extension<AppContext>,
-    AuthnExtractor(agent_id): AuthnExtractor,
-    Path((audience, scope)): Path<(String, String)>,
-) -> Result<hyper::Response<hyper::Body>, AppError> {
-    let object = AuthzObject::new(&["scopes", &scope, "nats"]).into();
-
-    ctx.authz()
-        .authorize(
-            audience,
-            agent_id.as_account_id().to_owned(),
-            object,
-            "connect".into(),
-        )
-        .await
-        .measure()?;
-
-    let token = build_token(&ctx, "scope", &scope, agent_id.as_account_id())?;
     let body = serde_json::to_string(&token).unwrap();
 
     Ok(hyper::Response::builder()
