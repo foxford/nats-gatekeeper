@@ -41,7 +41,7 @@ app:
   natsTokenClaims:
     expiration: 16 hours
     max_subscriptions: 5
-    max_payload: 102400
+    max_payload: 10240 # 10KB
 
 env:
   RUST_LOG: warn,nats_gatekeeper=info,svc_utils=info,svc_utils::metrics=warn
