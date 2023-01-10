@@ -1,0 +1,19 @@
+app:
+  svc:
+    audience: svc.test.net
+    credentials:
+      svc-pkcs8-der-credentials:
+        - subPath: svc.private_key
+          mountPath: /app/data/keys/svc.private_key.p8.der
+  audiences:
+    - audience: foo.bar
+      credentials:
+        foxford-pkcs8-der-credentials:
+          - subPath: iam.foo.public_key
+            mountPath: /app/data/keys/iam.foo.public_key.p8.der
+      authn:
+        key: /app/data/keys/iam.foo.public_key.p8.der
+      authz:
+        type: http
+ingress:
+  host: test.net
