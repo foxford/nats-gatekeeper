@@ -35,11 +35,11 @@ Common labels
 */}}
 {{- define "nats-gatekeeper.labels" -}}
 helm.sh/chart: {{ include "nats-gatekeeper.chart" . }}
-{{ include "nats-gatekeeper.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "nats-gatekeeper.selectorLabels" . }}
 {{- end }}
 
 {{/*
@@ -51,23 +51,34 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Short namespace.
+Tenant Service Audience
 */}}
-{{- define "nats-gatekeeper.shortNamespace" -}}
-{{- $shortns := regexSplit "-" .Release.Namespace -1 | first }}
-{{- if has $shortns (list "production" "p") }}
-{{- else }}
-{{- $shortns }}
-{{- end }}
-{{- end }}
+{{- define "nats-gatekeeper.tenantServiceAudience" -}}
+{{- $tenant := . -}}
+{{- list "svc" $tenant | join "." -}}
+{{- end -}}
 
 {{/*
-Audience Environment
+Tenant User Audience
 */}}
-{{- define "nats-gatekeeper.audienceEnvironment" -}}
-{{- $v := regexReplaceAll "(s)(\\d\\d)" (include "nats-gatekeeper.shortNamespace" .) "staging${2}" }}
-{{- $v := regexReplaceAll "(t)(\\d\\d)" $v "testing${2}" }}
-{{- $v }}
+{{- define "nats-gatekeeper.tenantUserAudience" -}}
+{{- $tenant := . -}}
+{{- list "usr" $tenant | join "." -}}
+{{- end -}}
+
+{{/*
+Tenant Object Audience
+*/}}
+{{- define "nats-gatekeeper.tenantObjectAudience" -}}
+{{- $namespace := index . 0 -}}
+{{- $tenant := index . 1 -}}
+{{- $env := regexSplit "-" $namespace -1 | first -}}
+{{- $devEnv := ""}}
+{{- if ne $env "p" }}
+{{- $devEnv = regexReplaceAll "(s)(\\d\\d)" $env "staging${2}" }}
+{{- $devEnv = regexReplaceAll "(t)(\\d\\d)" $devEnv "testing${2}" }}
+{{- end }}
+{{- list $devEnv $tenant | compact | join "." }}
 {{- end }}
 
 {{/*
