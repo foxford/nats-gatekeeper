@@ -45,11 +45,8 @@ pub fn build_router(context: AppContext) -> Router {
     routes.layer(svc_utils::middleware::LogLayer::new()).layer(
         TraceLayer::new_for_http()
             .make_span_with(|request: &Request<Body>| {
-                let ulms_app_audience =
-                    request.headers().get("ulms-app-audience").map(field::debug);
-                let ulms_scope = request.headers().get("ulms-scope").map(field::debug);
-                let ulms_app_version = request.headers().get("ulms-app-version").map(field::debug);
-                let ulms_app_label = request.headers().get("ulms-app-label").map(field::debug);
+                let header_as_field =
+                    |name: &str| request.headers().get(name).and_then(|v| v.to_str().ok());
 
                 let span = tracing::error_span!(
                     "http-api-request",
@@ -60,10 +57,10 @@ pub fn build_router(context: AppContext) -> Router {
                     kind = Empty,
                     detail = Empty,
                     body_size = Empty,
-                    ulms_app_audience,
-                    ulms_app_label,
-                    ulms_app_version,
-                    ulms_scope,
+                    ulms_app_audience = header_as_field("ulms-app-audience"),
+                    ulms_app_label = header_as_field("ulms-app-label"),
+                    ulms_app_version = header_as_field("ulms-app-version"),
+                    ulms_scope = header_as_field("ulms-scope"),
                 );
 
                 if request.method() != Method::GET && request.method() != Method::OPTIONS {
