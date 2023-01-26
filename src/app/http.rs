@@ -42,7 +42,7 @@ pub fn build_router(context: AppContext) -> Router {
 
     let routes = routes.merge(pingz_router);
 
-    routes.layer(svc_utils::middleware::LogLayer::new()).layer(
+    routes.layer(
         TraceLayer::new_for_http()
             .make_span_with(|request: &Request<Body>| {
                 let header_as_field =
