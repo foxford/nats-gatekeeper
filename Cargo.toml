@@ -27,6 +27,7 @@ svc-authz = "0.11"
 svc-error = { version = "0.3", features = ["svc-authn", "svc-authz", "sentry-extension"] }
 svc-utils = { version = "0.4", features = ["authn-extractor", "cors-middleware", "log-middleware", "metrics-middleware"] }
 tokio = { version = "1.16", features = ["full"] }
+tower-http = { version = "0.3.5", features = ["trace"] }
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-attributes  = "0.1"
