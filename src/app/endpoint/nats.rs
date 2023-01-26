@@ -60,7 +60,7 @@ fn build_token<D: Display>(
 
     let user_keypair = nats_jwt::KeyPair::new_user();
 
-    let allowed_topic = format!("{}.{}.unreliable", topic_prefix, topic_id);
+    let allowed_topic = format!("{topic_prefix}.{topic_id}.unreliable");
 
     let user_token =
         nats_jwt::Token::new_user(account_keypair.public_key(), user_keypair.public_key())
