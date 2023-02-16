@@ -24,7 +24,7 @@ spec:
         - name: regcred
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
           imagePullPolicy: IfNotPresent
           env:
             {{- range $key, $value := .Values.env }}
