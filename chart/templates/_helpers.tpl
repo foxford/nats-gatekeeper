@@ -35,9 +35,7 @@ Common labels
 */}}
 {{- define "nats-gatekeeper.labels" -}}
 helm.sh/chart: {{ include "nats-gatekeeper.chart" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/version: {{ .Values.app.image.tag | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "nats-gatekeeper.selectorLabels" . }}
 {{- end }}
