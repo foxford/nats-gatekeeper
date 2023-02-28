@@ -17,8 +17,10 @@ app:
 
   resources:
     requests:
-      cpu: 0.5
+      cpu: 0.01
       memory: 50Mi
+    limits:
+      memory: 100Mi
 
   natsTokenClaims:
     expiration: 16 hours
