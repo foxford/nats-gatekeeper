@@ -62,8 +62,8 @@ fn build_token<D: Display>(
 
     let allowed_topic = format!("{topic_prefix}.{topic_id}.unreliable");
     // agents.{account_id}.{requests, responses}
-    let request_wildcard = "agent.*.request".to_string();
-    let response_wildcard = "agent.*.response".to_string();
+    let request_wildcard = "agent.*.request";
+    let response_wildcard = "agent.*.response";
     let request_topic = format!("agent.{}.request", account_id.label());
     let response_topic = format!("agent.{}.response", account_id.label());
 
@@ -79,9 +79,9 @@ fn build_token<D: Display>(
             .allow_publish(request_wildcard)
             .allow_publish(response_wildcard)
             // allow to read requests
-            .allow_subscribe(&request_topic)
+            .allow_subscribe(request_topic)
             // allow to read replies
-            .allow_subscribe(&response_topic)
+            .allow_subscribe(response_topic)
             .expires(expiration(ctx))
             .sign(&account_keypair);
 
