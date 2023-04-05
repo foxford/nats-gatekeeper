@@ -62,8 +62,10 @@ fn build_token<D: Display>(
 
     let allowed_topic = format!("{topic_prefix}.{topic_id}.unreliable");
     // agents.{account_id}.{requests, responses}
-    let request_reply_wildcard = "agents.*.*".to_string();
-    let request_reply_topics = format!("agents.{}.*", account_id.label());
+    let request_wildcard = "agent.*.request".to_string();
+    let response_wildcard = "agent.*.response".to_string();
+    let request_topic = format!("agent.{}.request", account_id.label());
+    let response_topic = format!("agent.{}.response", account_id.label());
 
     let user_token =
         nats_jwt::Token::new_user(account_keypair.public_key(), user_keypair.public_key())
@@ -73,9 +75,13 @@ fn build_token<D: Display>(
             .max_subscriptions(ctx.config().max_subscriptions)
             .allow_publish(&allowed_topic)
             .allow_subscribe(&allowed_topic)
-            .allow_subscribe(&request_reply_topics)
-            .allow_publish(&request_reply_topics)
-            .allow_publish(request_reply_wildcard)
+            // allow to publish requests & replies
+            .allow_publish(request_wildcard)
+            .allow_publish(response_wildcard)
+            // allow to read requests
+            .allow_subscribe(&request_topic)
+            // allow to read replies
+            .allow_subscribe(&response_topic)
             .expires(expiration(ctx))
             .sign(&account_keypair);
 
