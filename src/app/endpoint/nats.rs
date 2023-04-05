@@ -71,9 +71,10 @@ fn build_token<D: Display>(
             .name(account_id.label())
             .max_payload(ctx.config().max_payload)
             .max_subscriptions(ctx.config().max_subscriptions)
-            .allow_publish(allowed_topic.clone())
-            .allow_subscribe(allowed_topic)
-            .allow_subscribe(request_reply_topics)
+            .allow_publish(&allowed_topic)
+            .allow_subscribe(&allowed_topic)
+            .allow_subscribe(&request_reply_topics)
+            .allow_publish(&request_reply_topics)
             .allow_publish(request_wildcard)
             .expires(expiration(ctx))
             .sign(&account_keypair);
