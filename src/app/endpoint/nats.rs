@@ -63,7 +63,7 @@ fn build_token<D: Display>(
     let allowed_topic = format!("{topic_prefix}.{topic_id}.unreliable");
     // agents.{account_id}.requests
     let request_wildcard = "agents.*.requests".to_string();
-    let request_reply_topics = format!("agents.{account_id}.>");
+    let request_reply_topics = format!("agents.{}.>", account_id.label());
 
     let user_token =
         nats_jwt::Token::new_user(account_keypair.public_key(), user_keypair.public_key())
