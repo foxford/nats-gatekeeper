@@ -63,7 +63,7 @@ fn build_token<D: Display>(
     let allowed_topic = format!("{topic_prefix}.{topic_id}.unreliable");
     // agents.{account_id}.requests
     let request_wildcard = "agents.*.requests".to_string();
-    let response_topic = format!("agents.{account_id}.responses");
+    let request_reply_topics = format!("agents.{account_id}.>");
 
     let user_token =
         nats_jwt::Token::new_user(account_keypair.public_key(), user_keypair.public_key())
@@ -73,7 +73,7 @@ fn build_token<D: Display>(
             .max_subscriptions(ctx.config().max_subscriptions)
             .allow_publish(allowed_topic.clone())
             .allow_subscribe(allowed_topic)
-            .allow_subscribe(response_topic)
+            .allow_subscribe(request_reply_topics)
             .allow_publish(request_wildcard)
             .expires(expiration(ctx))
             .sign(&account_keypair);
