@@ -1,7 +1,7 @@
 use anyhow::Context;
 use axum::extract::{Extension, Path};
 use serde::Serialize;
-use std::{fmt::Display, time::SystemTime};
+use std::time::SystemTime;
 use svc_authn::AccountId;
 use svc_authz::Authenticable;
 use svc_utils::extractors::AuthnExtractor;
@@ -35,7 +35,7 @@ pub async fn create_token(
         .await
         .measure()?;
 
-    let token = build_token(&ctx, classrooms, classroom_id, agent_id.as_account_id())?;
+    let token = build_token(&ctx, classroom_id, agent_id.as_account_id())?;
     let body = serde_json::to_string(&token).unwrap();
 
     Ok(hyper::Response::builder()
@@ -44,10 +44,9 @@ pub async fn create_token(
         .unwrap())
 }
 
-fn build_token<D: Display>(
+fn build_token(
     ctx: &AppContext,
-    topic_prefix: &str,
-    topic_id: D,
+    classroom_id: Uuid,
     account_id: &AccountId,
 ) -> Result<TokenResponse, AppError> {
     let account_keypair = nats_jwt::KeyPair::from_seed(ctx.nats_key())
@@ -60,12 +59,12 @@ fn build_token<D: Display>(
 
     let user_keypair = nats_jwt::KeyPair::new_user();
 
-    let allowed_topic = format!("{topic_prefix}.{topic_id}.unreliable");
-    // agents.{account_id}.{requests, responses}
-    let request_wildcard = "agent.*.request";
-    let response_wildcard = "agent.*.response";
-    let request_topic = format!("agent.{}.request", account_id.label());
-    let response_topic = format!("agent.{}.response", account_id.label());
+    let allowed_topic = format!("classrooms.{classroom_id}.unreliable");
+    // agent.{account_id}.{request, response}
+    let request_wildcard = format!("agent.*.request.{classroom_id}");
+    let response_wildcard = format!("agent.*.response.{classroom_id}");
+    let request_topic = format!("agent.{}.request.{classroom_id}", account_id.label());
+    let response_topic = format!("agent.{}.response.{classroom_id}", account_id.label());
 
     let user_token =
         nats_jwt::Token::new_user(account_keypair.public_key(), user_keypair.public_key())
