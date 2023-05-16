@@ -62,9 +62,9 @@ fn build_token(
     let allowed_topic = format!("classrooms.{classroom_id}.unreliable");
     // agent.{account_id}.{request, response}
     let request_wildcard = format!("agent.*.request.{classroom_id}");
-    let response_wildcard = format!("agent.*.response.{classroom_id}");
+    let response_wildcard = format!("agent.*.response.{classroom_id}.*.*");
     let request_topic = format!("agent.{}.request.{classroom_id}", account_id.label());
-    let response_topic = format!("agent.{}.response.{classroom_id}", account_id.label());
+    let response_topic = format!("agent.{}.response.{classroom_id}.*.*", account_id.label());
 
     let user_token =
         nats_jwt::Token::new_user(account_keypair.public_key(), user_keypair.public_key())
