@@ -18,4 +18,6 @@ app:
       authz:
         type: http
 ingress:
-  host: test.net
+  hosts:
+    - foo.bar
+    - bar.foo

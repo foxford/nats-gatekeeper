@@ -1,8 +1,12 @@
 The app is deployed at
-  http{{ if $.Values.tls }}s{{ end }}://{{ .Values.ingress.host }}{{ include "nats-gatekeeper.ingressPath" . }}
+  {{- range $host := .Values.ingress.hosts }}
+  http{{ if $.Values.tls }}s{{ end }}://{{ $host }}{{ include "nats-gatekeeper.ingressPath" $ }}
+  {{- end }}
 
 You can confirm that its running by visiting
-  http{{ if $.Values.tls }}s{{ end }}://{{ .Values.ingress.host }}{{ include "nats-gatekeeper.ingressPath" . }}/healthz
+  {{- range $host := .Values.ingress.hosts }}
+  http{{ if $.Values.tls }}s{{ end }}://{{ $host }}{{ include "nats-gatekeeper.ingressPath" $ }}/healthz
+  {{- end }}
 or by running helm tests:
   helm test -n {{ .Release.Namespace }} {{ .Release.Name }} %chart_dir%
 
